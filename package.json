@@ -1,0 +1,17 @@
+{
+  "name": "district-rp-store",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@libsql/client": "0.14.0",
+    "next": "16.2.10",
+    "next-auth": "4.24.14",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>District RP | Store</title>
+<link rel="stylesheet" href="css/style.css">
+<script>
+  (function () {
+    var saved = localStorage.getItem('drp-theme');
+    var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="#top">
+        <span class="brand-mark">DRP</span>
+        <span class="brand-name">DISTRICT RP</span>
+      </a>
+      <nav class="main-nav">
+        <a href="#top">Home</a>
+        <a href="#store" class="active">Store</a>
+        <a href="#rules">RP Rules</a>
+        <a href="#support">Support</a>
+        <a href="#policies">Policies</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="icon-sun">&#9728;</span>
+          <span class="icon-moon">&#9789;</span>
+        </button>
+        <button class="btn btn-outline">Log in</button>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- Server banner section -->
+    <section class="server-banner">
+      <div class="banner-card">
+        <div class="banner-art" aria-hidden="true">
+          <span class="banner-initials">DRP</span>
+        </div>
+        <div class="banner-body">
+          <div class="banner-top">
+            <h1>DISTRICT RP <span class="badge">ERLC</span></h1>
+            <p class="tagline">Serious Roleplay, Realistic Emergency Response, Custom Liveries &amp; Departments</p>
+          </div>
+          <div class="banner-stats">
+            <span class="stat"><i class="dot dot-live"></i> 1,200</span>
+            <span class="stat"><i class="dot dot-players"></i> 42 / 60</span>
+          </div>
+          <div class="banner-tags">
+            <span class="tag">roleplay</span>
+            <span class="tag">erlc</span>
+            <span class="tag">police</span>
+            <span class="tag">fire &amp; ems</span>
+          </div>
+          <div class="banner-actions">
+            <a href="#" class="btn btn-primary">Join Server</a>
+            <a href="#" class="btn btn-outline">Discord</a>
+            <button class="fav-btn" aria-label="Favorite">&#9825;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Store section -->
+    <section id="store" class="store-section">
+      <div class="store-heading">
+        <h2>Store</h2>
+        <p>Support District RP and unlock community perks. All purchases are cosmetic or quality-of-life &mdash; nothing here bypasses training, applications, or department requirements.</p>
+      </div>
+
+      <div class="product-grid">
+
+        <article class="product-card">
+          <h3>VIP Rank</h3>
+          <span class="price">$4.99</span>
+          <p>Get a VIP role in Discord and in-server, priority support, and access to exclusive VIP-only channels.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Priority Queue</h3>
+          <span class="price">$3.50</span>
+          <p>Skip the server join queue during busy hours and get into District RP faster.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Custom Vehicle Livery</h3>
+          <span class="price">$7.99</span>
+          <p>Get a fully custom livery designed for your civilian or department vehicle of choice.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Application Priority Review</h3>
+          <span class="price">$5</span>
+          <p>Move to the front of the department application queue. <strong>NOTE:</strong> This does not skip training, interviews, or guarantee acceptance &mdash; you still have to pass like everyone else.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Custom Discord Role</h3>
+          <span class="price">$5</span>
+          <p>A personalized, colored Discord role with a name and color of your choice.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Custom License Plate</h3>
+          <span class="price">$2.50</span>
+          <p>Set a custom license plate on your in-game vehicles (subject to server naming rules).</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Donation</h3>
+          <span class="price price-choose">Customer Chooses</span>
+          <p>Support the server directly with a donation of your choice. All proceeds go towards server costs and events.</p>
+          <button class="btn btn-buy">Donate</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Exclusive Vehicle Pack</h3>
+          <span class="price">$12.99</span>
+          <p>Unlock an exclusive civilian vehicle pack available only to supporters.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Ride-Along Pass</h3>
+          <span class="price">$4</span>
+          <p>Book a ride-along with an active PD, SD, FD, or EMS unit for a scheduled shift.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Server Whitelist Slot</h3>
+          <span class="price">$10</span>
+          <p>Reserve a guaranteed whitelisted slot on District RP, even during full server events.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Name Color &amp; Tag</h3>
+          <span class="price">$3</span>
+          <p>Stand out with a custom name color and supporter tag visible in-game and on Discord.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+        <article class="product-card">
+          <h3>Discord Unban Review</h3>
+          <span class="price">$5</span>
+          <p>Request a priority review of a Discord ban. <strong>NOTE:</strong> This guarantees a review, not a reversal.</p>
+          <button class="btn btn-buy">Buy</button>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>District RP is an independent community and is not affiliated with, endorsed by, or sponsored by Roblox Corporation or the developers of ERLC.</p>
+    <p>&copy; <span id="year"></span> District RP. All purchases are optional and support server costs &mdash; no purchase grants an in-game advantage over other players.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

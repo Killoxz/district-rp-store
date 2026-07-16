@@ -14,7 +14,15 @@ const LINKS = [
 ];
 
 export async function Header() {
-  const session = await getSession();
+  let session = null;
+  try {
+    session = await getSession();
+  } catch (error) {
+    // A misconfigured or incomplete auth setup (e.g. missing OAuth
+    // credentials while they're still being set up) shouldn't take down
+    // every page — just treat it as "not logged in".
+    console.error('Failed to read session:', error);
+  }
 
   let cartCount = 0;
   if (session?.user?.id) {

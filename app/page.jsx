@@ -6,6 +6,8 @@ import { ServerStatus } from '@/components/ServerStatus';
 
 export default async function HomePage() {
   const products = await getProducts();
+  const joinLink = process.env.ROBLOX_JOIN_LINK || '#';
+  const discordLink = process.env.DISCORD_SUPPORT_LINK || '#';
 
   return (
     <>
@@ -38,8 +40,8 @@ export default async function HomePage() {
               <span className="tag">fire &amp; ems</span>
             </div>
             <div className="banner-actions">
-              <a href="#" className="btn btn-primary">Join Server</a>
-              <a href="#" className="btn btn-outline">Discord</a>
+              <a href={joinLink} className="btn btn-primary">Join Server</a>
+              <a href={discordLink} className="btn btn-outline" target="_blank" rel="noopener noreferrer">Discord</a>
               <a href="#store" className="btn btn-outline">Visit Store</a>
             </div>
           </div>

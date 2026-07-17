@@ -161,8 +161,8 @@ a { color: inherit; text-decoration: none; }
 /* Theme toggle */
 .theme-toggle {
   position: relative;
-  width: 44px;
-  height: 26px;
+  width: 52px;
+  height: 30px;
   border-radius: 8px;
   border: 1px solid var(--card-border);
   background: var(--bg-soft);
@@ -176,27 +176,27 @@ a { color: inherit; text-decoration: none; }
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1;
 }
 
-.theme-toggle .icon-sun { left: 6px; color: var(--red); }
-.theme-toggle .icon-moon { right: 6px; color: var(--text-dim); }
+.theme-toggle .icon-sun { left: 7px; color: var(--red); }
+.theme-toggle .icon-moon { right: 7px; color: var(--text-dim); }
 
 .theme-toggle::before {
   content: "";
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   background: linear-gradient(135deg, var(--red), var(--red-soft));
   transition: transform 0.2s ease;
 }
 
 :root[data-theme="dark"] .theme-toggle::before {
-  transform: translateX(18px);
+  transform: translateX(22px);
 }
 
 .nav-toggle {

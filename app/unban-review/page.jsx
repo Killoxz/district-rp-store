@@ -12,7 +12,15 @@ export const metadata = { title: 'Unban Review Application | District RP' };
 
 const UNBAN_PRODUCT_ID = 'discord-unban-review';
 
-export default async function UnbanReviewPage() {
+const ERROR_MESSAGES = {
+  missing_order: 'Enter the Order ID from your purchase confirmation.',
+  invalid_order: "That Order ID doesn't match a Discord + In-Game Unban Review purchase on your account.",
+  missing_fields: 'Please fill in every field before submitting.',
+  unknown: 'Something went wrong submitting your application. Please try again.',
+};
+
+export default async function UnbanReviewPage({ searchParams }) {
+  const sp = await searchParams;
   const session = await getSession();
   if (!session?.user?.id) {
     redirect('/login?callbackUrl=/unban-review');
@@ -38,13 +46,41 @@ export default async function UnbanReviewPage() {
     getUnbanApplicationsForUser(userId),
   ]);
 
+  const error = sp?.error;
+  const submitted = sp?.submitted === '1';
+
   return (
     <div className="page">
       <h1>Unban Review Application</h1>
-      <p>You've purchased Discord + In-Game Unban Review, so you can submit an application below. Staff will follow up in Discord.</p>
+      <p>
+        You've purchased Discord + In-Game Unban Review. To confirm it's really your purchase, enter the
+        Order ID shown on your order confirmation page, then fill out the rest of the form below.
+      </p>
+
+      {submitted && (
+        <p style={{ color: 'var(--green)', fontSize: 13, marginBottom: 16 }}>
+          Application submitted — staff will follow up in Discord.
+        </p>
+      )}
+
+      {error && (
+        <p style={{ color: 'var(--red)', fontSize: 13, marginBottom: 16 }}>
+          {ERROR_MESSAGES[error] || ERROR_MESSAGES.unknown}
+        </p>
+      )}
 
       <form action={submitUnbanApplicationAction} className="application-form">
-        <input type="hidden" name="orderId" value={recentOrderId || ''} />
+        <div className="field">
+          <label htmlFor="orderId">Order ID</label>
+          <input
+            id="orderId"
+            name="orderId"
+            type="text"
+            defaultValue={recentOrderId || ''}
+            placeholder="order_xxxxxxxx"
+            required
+          />
+        </div>
 
         <div className="field">
           <label htmlFor="robloxUsername">Roblox Username</label>

@@ -2,11 +2,13 @@ import { redirect, notFound } from 'next/navigation';
 import { getSession } from '@/lib/session';
 import { getOrder } from '@/lib/store';
 import { formatCents } from '@/lib/format';
+import { retryPaymentAction } from '@/app/actions/checkout';
 
 export const metadata = { title: 'Order | District RP' };
 
-export default async function OrderPage({ params }) {
+export default async function OrderPage({ params, searchParams }) {
   const { id } = await params;
+  const sp = await searchParams;
   const session = await getSession();
   if (!session?.user?.id) {
     redirect(`/login?callbackUrl=/orders/${id}`);
@@ -15,16 +17,19 @@ export default async function OrderPage({ params }) {
   const order = await getOrder(id, session.user.id);
   if (!order) notFound();
 
-  const paypalLink = process.env.PAYPAL_LINK || '#';
   const discordLink = process.env.DISCORD_SUPPORT_LINK || '#';
+  const isPaid = order.status === 'paid';
+  const stripeFailed = sp?.error === 'stripe_failed';
 
   return (
     <div className="page">
       <div className="order-card">
-        <h1>Order Received</h1>
+        <h1>{isPaid ? 'Payment Confirmed' : 'Order Received'}</h1>
         <p>
-          Order <span className="order-id">{order.id}</span> for <strong>{session.user.name}</strong> is
-          awaiting payment. Complete payment below, then keep your order ID for Support.
+          Order <span className="order-id">{order.id}</span> for <strong>{session.user.name}</strong>{' '}
+          {isPaid
+            ? 'has been paid. Staff have been notified and will deliver your item(s) shortly.'
+            : 'is awaiting payment.'}
         </p>
 
         <div className="order-items">
@@ -40,20 +45,32 @@ export default async function OrderPage({ params }) {
           </div>
         </div>
 
-        <div className="payment-box">
-          <h2>Complete Your Payment</h2>
-          <p>
-            Pay {formatCents(order.total_cents)} via PayPal, then open a Discord support ticket with your
-            order ID (<span className="order-id">{order.id}</span>) and payment confirmation so staff can
-            deliver your item.
-          </p>
-          <a className="btn btn-primary" href={paypalLink} target="_blank" rel="noopener noreferrer">
-            Pay with PayPal
-          </a>{' '}
-          <a className="btn btn-outline" href={discordLink} target="_blank" rel="noopener noreferrer">
-            Open Discord Ticket
-          </a>
-        </div>
+        {isPaid ? (
+          <div className="payment-box">
+            <h2>You're all set</h2>
+            <p>
+              Keep your order ID (<span className="order-id">{order.id}</span>) handy — if your item hasn't
+              arrived after a while, reach out on Discord with it.
+            </p>
+            <a className="btn btn-outline" href={discordLink} target="_blank" rel="noopener noreferrer">
+              Open Discord
+            </a>
+          </div>
+        ) : (
+          <div className="payment-box">
+            <h2>Complete Your Payment</h2>
+            {stripeFailed && (
+              <p style={{ color: 'var(--red)' }}>
+                Something went wrong starting checkout. Please try again below.
+              </p>
+            )}
+            <p>Pay {formatCents(order.total_cents)} securely by card to finish this order.</p>
+            <form action={retryPaymentAction}>
+              <input type="hidden" name="orderId" value={order.id} />
+              <button type="submit" className="btn btn-primary">Pay Now</button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

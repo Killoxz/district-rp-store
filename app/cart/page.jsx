@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
 import { getCartItems } from '@/lib/store';
 import { formatCents } from '@/lib/format';
-import { updateQuantityAction, removeCartItemAction, checkoutAction } from '@/app/actions/cart';
+import { updateQuantityAction, removeCartItemAction } from '@/app/actions/cart';
+import { checkoutAction } from '@/app/actions/checkout';
 
 export const metadata = { title: 'Cart | District RP' };
 

@@ -1,6 +1,6 @@
 # District RP Store
 
-Next.js store site with Roblox login, a real cart, and checkout that produces an order + manual payment instructions.
+Next.js store site with Roblox login, a real cart, and real card checkout via Stripe.
 
 ## Running it locally
 
@@ -89,10 +89,11 @@ Then create a new repo on GitHub and push to it (GitHub's "create a new reposito
    - `ROBLOX_CLIENT_ID`, `ROBLOX_CLIENT_SECRET` — same values as local, or a separate OAuth app if you want to keep prod/dev fully separate
    - `NEXTAUTH_SECRET` — generate a fresh one for production
    - `NEXTAUTH_URL` — your Vercel URL once you know it, e.g. `https://district-rp.vercel.app` (you can update this after the first deploy shows you the URL)
-   - `PAYPAL_LINK`, `DISCORD_SUPPORT_LINK` — your real links
+   - `DISCORD_SUPPORT_LINK` — your real Discord invite
    - `ERLC_SERVER_KEY` — your real ERLC server key
    - `TURSO_DATABASE_URL` — the `libsql://...` URL from step 1
    - `TURSO_AUTH_TOKEN` — the token from step 1
+   - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `DISCORD_ORDER_WEBHOOK_URL` — see "How checkout works right now" below for where these come from
 4. Click **Deploy**. Once it's live, copy the real `https://your-project.vercel.app` URL.
 5. Update `NEXTAUTH_URL` in Vercel's env vars to that exact URL if you didn't already, and redeploy (Vercel redeploys automatically on env var changes or you can trigger it manually).
 
@@ -108,11 +109,38 @@ That's it — from then on, every `git push` to your repo auto-deploys a new ver
 
 ## How checkout works right now
 
-There's no real payment processor wired in — checkout builds an order (itemized, with a total) and shows a payment-instructions page with:
-- A "Pay with PayPal" button, driven by `PAYPAL_LINK` in `.env.local`
-- A "Open Discord Ticket" button, driven by `DISCORD_SUPPORT_LINK` in `.env.local`
+Checkout uses **Stripe Checkout** (Stripe's own hosted payment page) for real, automatic card payments. The flow: cart → an order is created → customer is redirected to Stripe to pay → Stripe tells the site payment succeeded via a webhook → the order flips to "paid" and a message posts to your Discord automatically so staff know to deliver it. Nobody has to manually confirm a PayPal payment or open a ticket to prove they paid.
 
-Edit those two env vars to your real links. The customer pays manually, then opens a Discord ticket with their order ID so staff can deliver the item. If you'd rather have real card checkout later (e.g. Stripe), that's a separate build — this version deliberately keeps payment manual since that's what was asked for.
+There's still no way for this site to auto-grant a Discord role or in-game item — that part stays manual, it's just that staff now find out about it automatically instead of waiting on the customer.
+
+### 1. Create a Stripe account and get API keys
+
+1. Sign up free at **https://stripe.com**. You can build and test everything in **test mode** before ever adding real payout details.
+2. Go to **https://dashboard.stripe.com/apikeys** and copy the **Secret key** (starts with `sk_test_` in test mode).
+3. Set it in `.env.local` (locally) and in your host's environment variables (once deployed):
+   ```
+   STRIPE_SECRET_KEY=<your secret key>
+   ```
+
+### 2. Set up the webhook that confirms payment
+
+Stripe needs to tell your site when a payment actually succeeds — this happens via a webhook, so it has to point at your deployed URL (not localhost):
+
+1. Go to **https://dashboard.stripe.com/webhooks** → **Add endpoint**.
+2. Endpoint URL: `https://your-site.example.com/api/webhooks/stripe`
+3. Select the event **`checkout.session.completed`**.
+4. Save it, then copy the **Signing secret** (starts with `whsec_`).
+5. Set it as `STRIPE_WEBHOOK_SECRET` in your host's environment variables.
+
+### 3. Set up the Discord staff notification
+
+1. In Discord, go to the channel you want order notifications in → **Edit Channel** → **Integrations** → **Webhooks** → **New Webhook**.
+2. Copy its **Webhook URL**.
+3. Set it as `DISCORD_ORDER_WEBHOOK_URL` in `.env.local` and your host's environment variables.
+
+### Testing card payments
+
+In test mode, use Stripe's test card `4242 4242 4242 4242`, any future expiry date, any CVC, and any ZIP — it'll complete like a real payment without charging anything. When you're ready to accept real money, finish Stripe's account activation (business details, bank account) and swap in your **live** secret key and a **live-mode** webhook endpoint/secret.
 
 ## Editing store products
 
@@ -120,11 +148,15 @@ Products live in `SEED_PRODUCTS` in [lib/db.js](lib/db.js). Seeding uses `INSERT
 
 ## Project structure
 
-- `app/` — pages (Next.js App Router): home, store, cart, checkout/order confirmation, login, rules, support, policies
-- `app/actions/cart.js` — server actions for add/update/remove cart items and checkout
+- `app/` — pages (Next.js App Router): home, store, cart, order confirmation, unban review application, login, rules, support, policies
+- `app/actions/cart.js` — server actions for add/update/remove cart items
+- `app/actions/checkout.js` — creates the order and the Stripe Checkout session, plus retrying an unpaid order
+- `app/api/webhooks/stripe/route.js` — Stripe calls this when a payment completes; marks the order paid and notifies Discord
 - `app/api/auth/[...nextauth]/route.js` — NextAuth route wired to Roblox's OAuth/OIDC endpoints
 - `lib/db.js` — database schema + product seed, via `@libsql/client` (local file in dev, hosted Turso database in production)
 - `lib/store.js` — all cart/order/user database queries
+- `lib/stripe.js` — creates Stripe Checkout sessions
+- `lib/discord-webhook.js` — posts the paid-order notification to Discord
 - `lib/auth.js` — NextAuth config + Roblox provider
 - `lib/erlc.js` — fetches + caches live server status from ERLC's Server API
 - `app/api/server-status/route.js` — endpoint the banner polls for live status

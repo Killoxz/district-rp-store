@@ -1,12 +1,10 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import {
   addToCart,
   updateCartItemQuantity,
   removeCartItem,
-  createOrderFromCart,
 } from '@/lib/store';
 import { requireUserId, isRedirectError } from '@/lib/action-helpers';
 
@@ -60,19 +58,4 @@ export async function removeCartItemAction(formData) {
     if (isRedirectError(error)) throw error;
     console.error('removeCartItemAction failed:', error);
   }
-}
-
-export async function checkoutAction() {
-  const userId = await requireUserId();
-
-  let orderId;
-  try {
-    orderId = await createOrderFromCart(userId);
-  } catch (error) {
-    console.error('checkoutAction failed:', error);
-    redirect('/cart');
-  }
-
-  revalidatePath('/', 'layout');
-  redirect(`/orders/${orderId}`);
 }

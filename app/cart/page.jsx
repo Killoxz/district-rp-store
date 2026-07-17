@@ -8,7 +8,13 @@ import { checkoutAction } from '@/app/actions/checkout';
 
 export const metadata = { title: 'Cart | District RP' };
 
-export default async function CartPage() {
+const ERROR_MESSAGES = {
+  invalid_promo: "That promo code isn't valid or has expired.",
+  checkout_failed: 'Something went wrong starting checkout. Please try again.',
+};
+
+export default async function CartPage({ searchParams }) {
+  const sp = await searchParams;
   const session = await getSession();
   if (!session?.user?.id) {
     redirect('/login?callbackUrl=/cart');
@@ -16,6 +22,7 @@ export default async function CartPage() {
 
   const items = await getCartItems(session.user.id);
   const totalCents = items.reduce((sum, item) => sum + item.lineTotalCents, 0);
+  const error = sp?.error;
 
   if (items.length === 0) {
     return (
@@ -32,6 +39,12 @@ export default async function CartPage() {
   return (
     <div className="page">
       <h1>Your Cart</h1>
+
+      {error && (
+        <p style={{ color: 'var(--red)', fontSize: 13, marginBottom: 16 }}>
+          {ERROR_MESSAGES[error] || 'Something went wrong. Please try again.'}
+        </p>
+      )}
 
       <div className="cart-table">
         {items.map((item) => (
@@ -70,11 +83,15 @@ export default async function CartPage() {
       </div>
 
       <div className="cart-summary">
-        <div className="cart-summary-row total">
-          <span>Total</span>
-          <span>{formatCents(totalCents)}</span>
-        </div>
         <form action={checkoutAction}>
+          <div className="field" style={{ marginBottom: 12 }}>
+            <label htmlFor="promoCode">Promo code (optional)</label>
+            <input id="promoCode" name="promoCode" type="text" placeholder="e.g. SAVE5" />
+          </div>
+          <div className="cart-summary-row total">
+            <span>Total</span>
+            <span>{formatCents(totalCents)}</span>
+          </div>
           <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 12 }}>
             Checkout
           </button>

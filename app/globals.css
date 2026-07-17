@@ -520,6 +520,7 @@ a { color: inherit; text-decoration: none; }
 
 .price { color: var(--red); font-weight: 700; font-size: 14px; }
 .price-choose { color: var(--green); }
+.price-was { color: var(--text-dim); font-weight: 400; text-decoration: line-through; font-size: 13px; }
 
 .product-card p { margin: 0 0 8px; color: var(--text-dim); font-size: 13px; line-height: 1.5; flex: 1; }
 .product-card strong { color: var(--text); }

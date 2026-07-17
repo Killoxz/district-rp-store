@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { getSession } from '@/lib/session';
 import { getOrder } from '@/lib/store';
 import { formatCents } from '@/lib/format';
-import { retryPaymentAction } from '@/app/actions/checkout';
 
 export const metadata = { title: 'Order | District RP' };
 
@@ -19,16 +19,21 @@ export default async function OrderPage({ params, searchParams }) {
 
   const discordLink = process.env.DISCORD_SUPPORT_LINK || '#';
   const isPaid = order.status === 'paid';
-  const stripeFailed = sp?.error === 'stripe_failed';
+  // Stripe redirects back here right after confirming payment client-side —
+  // the webhook that actually flips order.status to 'paid' may land a beat
+  // later, so this state covers that brief gap.
+  const justConfirmedOnStripe = !isPaid && sp?.redirect_status === 'succeeded';
 
   return (
     <div className="page">
       <div className="order-card">
-        <h1>{isPaid ? 'Payment Confirmed' : 'Order Received'}</h1>
+        <h1>{isPaid ? 'Payment Confirmed' : justConfirmedOnStripe ? 'Confirming Payment…' : 'Order Received'}</h1>
         <p>
           Order <span className="order-id">{order.id}</span> for <strong>{session.user.name}</strong>{' '}
           {isPaid
             ? 'has been paid. Staff have been notified and will deliver your item(s) shortly.'
+            : justConfirmedOnStripe
+            ? 'was just paid — waiting on final confirmation, this page will update shortly.'
             : 'is awaiting payment.'}
         </p>
 
@@ -39,6 +44,12 @@ export default async function OrderPage({ params, searchParams }) {
               <span>{formatCents(item.unit_price_cents * item.quantity)}</span>
             </div>
           ))}
+          {order.discount_cents > 0 && (
+            <div className="order-item-row">
+              <span>Promo ({order.promo_code})</span>
+              <span>&minus;{formatCents(order.discount_cents)}</span>
+            </div>
+          )}
           <div className="order-item-row">
             <span><strong>Total</strong></span>
             <span><strong>{formatCents(order.total_cents)}</strong></span>
@@ -56,19 +67,16 @@ export default async function OrderPage({ params, searchParams }) {
               Open Discord
             </a>
           </div>
+        ) : justConfirmedOnStripe ? (
+          <div className="payment-box">
+            <h2>Almost done</h2>
+            <p>Your payment succeeded — refresh in a few seconds if this doesn't update automatically.</p>
+          </div>
         ) : (
           <div className="payment-box">
             <h2>Complete Your Payment</h2>
-            {stripeFailed && (
-              <p style={{ color: 'var(--red)' }}>
-                Something went wrong starting checkout. Please try again below.
-              </p>
-            )}
             <p>Pay {formatCents(order.total_cents)} securely by card to finish this order.</p>
-            <form action={retryPaymentAction}>
-              <input type="hidden" name="orderId" value={order.id} />
-              <button type="submit" className="btn btn-primary">Pay Now</button>
-            </form>
+            <Link href={`/checkout/${order.id}`} className="btn btn-primary">Pay Now</Link>
           </div>
         )}
       </div>

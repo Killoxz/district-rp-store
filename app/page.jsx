@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getProducts } from '@/lib/store';
 import { formatCents } from '@/lib/format';
 import { addToCartAction } from '@/app/actions/cart';
+import { buyNowAction } from '@/app/actions/checkout';
 import { ServerStatus } from '@/components/ServerStatus';
 
 export default async function HomePage() {
@@ -61,6 +62,11 @@ export default async function HomePage() {
               <h3>{product.name}</h3>
               {product.is_donation ? (
                 <span className="price price-choose">Customer Chooses</span>
+              ) : product.compare_at_price_cents > product.price_cents ? (
+                <span className="price">
+                  <span className="price-was">{formatCents(product.compare_at_price_cents)}</span>{' '}
+                  {formatCents(product.price_cents)}
+                </span>
               ) : (
                 <span className="price">{formatCents(product.price_cents)}</span>
               )}
@@ -94,6 +100,15 @@ export default async function HomePage() {
                   </button>
                 )}
               </form>
+
+              {!product.is_donation && (
+                <form action={buyNowAction}>
+                  <input type="hidden" name="productId" value={product.id} />
+                  <button className="btn btn-outline" type="submit" style={{ width: '100%' }}>
+                    Buy Now
+                  </button>
+                </form>
+              )}
 
               {product.id === 'discord-unban-review' && (
                 <Link href="/unban-review" className="btn-ghost" style={{ textAlign: 'center' }}>

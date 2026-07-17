@@ -2,6 +2,7 @@ import './globals.css';
 import { Providers } from './providers';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { NotificationToast } from '@/components/NotificationToast';
 
 export const metadata = {
   title: 'District RP | Store',
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
           <Header />
           <main>{children}</main>
           <Footer />
+          <NotificationToast />
         </Providers>
       </body>
     </html>

@@ -3,11 +3,13 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireUserId, isRedirectError } from '@/lib/action-helpers';
+import { getSession } from '@/lib/session';
 import {
   hasPurchasedProduct,
   verifyOrderContainsProduct,
   createUnbanApplication,
 } from '@/lib/store';
+import { notifyDiscordUnbanApplication } from '@/lib/discord-webhook';
 
 const UNBAN_PRODUCT_ID = 'discord-unban-review';
 
@@ -39,7 +41,7 @@ export async function submitUnbanApplicationAction(formData) {
       redirect('/unban-review?error=missing_fields');
     }
 
-    await createUnbanApplication({
+    const applicationId = await createUnbanApplication({
       userId,
       orderId,
       robloxUsername,
@@ -47,6 +49,18 @@ export async function submitUnbanApplicationAction(formData) {
       banType,
       details,
     });
+
+    const session = await getSession();
+
+    await notifyDiscordUnbanApplication({
+      id: applicationId,
+      orderId,
+      robloxUsername,
+      discordUsername,
+      banType,
+      details,
+      accountUsername: session?.user?.name,
+    }).catch((err) => console.error('Failed to notify Discord of unban application:', err));
 
     revalidatePath('/unban-review');
     redirect('/unban-review?submitted=1');

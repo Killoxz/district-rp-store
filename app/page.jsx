@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { getProducts } from '@/lib/store';
 import { formatCents } from '@/lib/format';
 import { addToCartAction } from '@/app/actions/cart';
@@ -93,6 +94,12 @@ export default async function HomePage() {
                   </button>
                 )}
               </form>
+
+              {product.id === 'discord-unban-review' && (
+                <Link href="/unban-review" className="btn-ghost" style={{ textAlign: 'center' }}>
+                  Already purchased? Submit your application &rarr;
+                </Link>
+              )}
             </article>
           ))}
         </div>

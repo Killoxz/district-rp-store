@@ -2,28 +2,13 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { getSession } from '@/lib/session';
 import {
   addToCart,
   updateCartItemQuantity,
   removeCartItem,
   createOrderFromCart,
 } from '@/lib/store';
-
-// redirect() works by throwing a special error Next's router unwinds on.
-// Any try/catch around code that might call redirect() must let this
-// specific error re-throw instead of swallowing it as a "real" failure.
-function isRedirectError(error) {
-  return typeof error?.digest === 'string' && error.digest.startsWith('NEXT_REDIRECT');
-}
-
-async function requireUserId() {
-  const session = await getSession();
-  if (!session?.user?.id) {
-    redirect('/login');
-  }
-  return session.user.id;
-}
+import { requireUserId, isRedirectError } from '@/lib/action-helpers';
 
 export async function addToCartAction(formData) {
   const userId = await requireUserId();

@@ -10,6 +10,7 @@ export const metadata = { title: 'Cart | District RP' };
 
 const ERROR_MESSAGES = {
   invalid_promo: "That promo code isn't valid or has expired.",
+  promo_not_applicable: "That promo code can't be applied — every item in your cart is already discounted.",
   checkout_failed: 'Something went wrong starting checkout. Please try again.',
 };
 
@@ -86,7 +87,7 @@ export default async function CartPage({ searchParams }) {
         <form action={checkoutAction}>
           <div className="field" style={{ marginBottom: 12 }}>
             <label htmlFor="promoCode">Promo code (optional)</label>
-            <input id="promoCode" name="promoCode" type="text" placeholder="e.g. SAVE5" />
+            <input id="promoCode" name="promoCode" type="text" placeholder="Enter code" />
           </div>
           <div className="cart-summary-row total">
             <span>Total</span>

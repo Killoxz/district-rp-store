@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { requireUserId } from '@/lib/action-helpers';
 import { isAdmin, createPromoCode, togglePromoCodeActive, deletePromoCode } from '@/lib/store';
+import { syncPromoCodesEmbed } from '@/lib/discord-promo-embed';
 
 async function requireAdmin() {
   const userId = await requireUserId();
@@ -33,6 +34,7 @@ export async function createPromoCodeAction(formData) {
     maxUses: maxUsesInput ? Number(maxUsesInput) : null,
   });
 
+  await syncPromoCodesEmbed();
   revalidatePath('/admin/promo-codes');
 }
 
@@ -41,6 +43,7 @@ export async function togglePromoCodeActiveAction(formData) {
   const id = formData.get('id')?.toString();
   if (!id) return;
   await togglePromoCodeActive(id);
+  await syncPromoCodesEmbed();
   revalidatePath('/admin/promo-codes');
 }
 
@@ -49,5 +52,6 @@ export async function deletePromoCodeAction(formData) {
   const id = formData.get('id')?.toString();
   if (!id) return;
   await deletePromoCode(id);
+  await syncPromoCodesEmbed();
   revalidatePath('/admin/promo-codes');
 }

@@ -16,6 +16,9 @@ export async function checkoutAction(formData) {
     if (error.message === 'INVALID_PROMO') {
       redirect('/cart?error=invalid_promo');
     }
+    if (error.message === 'PROMO_NOT_APPLICABLE') {
+      redirect('/cart?error=promo_not_applicable');
+    }
     console.error('checkoutAction failed to create order:', error);
     redirect('/cart?error=checkout_failed');
   }
@@ -41,6 +44,9 @@ export async function buyNowAction(formData) {
     if (isRedirectError(error)) throw error;
     if (error.message === 'INVALID_PROMO') {
       redirect('/?error=invalid_promo#store');
+    }
+    if (error.message === 'PROMO_NOT_APPLICABLE') {
+      redirect('/?error=promo_not_applicable#store');
     }
     console.error('buyNowAction failed to create order:', error);
     redirect('/?error=checkout_failed#store');

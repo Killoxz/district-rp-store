@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDepartmentApplication } from '@/lib/store';
 import { sendEmail } from '@/lib/email';
+import { buildDepartmentDecisionEmail } from '@/lib/emailTemplates';
 
 const DEPARTMENT_LABELS = {
   police: 'Police Department',
@@ -26,11 +27,7 @@ export async function POST(request) {
   const approved = application.status === 'approved';
   const departmentLabel = DEPARTMENT_LABELS[application.department] || application.department;
 
-  const html = approved
-    ? `<p>Congratulations! Your application to join the <strong>${departmentLabel}</strong> has been <strong>accepted</strong>.</p>
-       <p>Staff will follow up with next steps in Discord.</p>`
-    : `<p>Thanks for applying to the <strong>${departmentLabel}</strong>. Unfortunately your application was <strong>declined</strong> this time.</p>
-       <p>You're welcome to reach out to staff in Discord if you have questions, or apply again in the future.</p>`;
+  const html = buildDepartmentDecisionEmail({ department: application.department, approved });
 
   const result = await sendEmail({
     to: application.email,

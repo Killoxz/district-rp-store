@@ -27,7 +27,10 @@ export async function POST(request) {
   const approved = application.status === 'approved';
   const departmentLabel = DEPARTMENT_LABELS[application.department] || application.department;
 
-  const html = buildDepartmentDecisionEmail({ department: application.department, approved });
+  const html = approved
+    ? buildDepartmentDecisionEmail({ department: application.department, approved: true })
+    : `<p>Thanks for applying to the <strong>${departmentLabel}</strong>. Unfortunately your application was <strong>declined</strong> this time.</p>
+       <p>You're welcome to reach out to staff in Discord if you have questions, or apply again in the future.</p>`;
 
   const result = await sendEmail({
     to: application.email,

@@ -5,6 +5,7 @@ import { formatCents } from '@/lib/format';
 import { addToCartAction } from '@/app/actions/cart';
 import { buyNowAction } from '@/app/actions/checkout';
 import { ServerStatus } from '@/components/ServerStatus';
+import { JoinServerButton } from '@/components/JoinServerButton';
 
 export default async function HomePage() {
   const products = await getProducts();
@@ -42,7 +43,7 @@ export default async function HomePage() {
               <span className="tag">fire &amp; ems</span>
             </div>
             <div className="banner-actions">
-              <a href={joinLink} className="btn btn-primary">Join Server</a>
+              <JoinServerButton joinLink={joinLink} discordLink={discordLink} />
               <a href={discordLink} className="btn btn-outline" target="_blank" rel="noopener noreferrer">Discord</a>
               <a href="#store" className="btn btn-outline">Visit Store</a>
             </div>

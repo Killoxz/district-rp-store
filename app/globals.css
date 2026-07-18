@@ -787,6 +787,132 @@ a { color: inherit; text-decoration: none; }
   .cart-row { flex-wrap: wrap; }
 }
 
+.connect-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+
+.connect-modal {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 32px 24px 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+
+.connect-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+}
+.connect-close:hover { color: var(--red); }
+
+.connect-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.connect-node-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.connect-node-you { color: var(--red); border-color: var(--red-tint); }
+.connect-node-roblox { background: var(--red-tint); color: var(--red); border-color: var(--red-tint); }
+
+.connect-line {
+  flex: 1;
+  height: 2px;
+  background: var(--card-border);
+  min-width: 32px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.connect-line-ok { background: var(--green); }
+.connect-line-fail { background: var(--red); }
+
+.connect-icon-ok, .connect-icon-fail {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #fff;
+}
+.connect-icon-ok { background: var(--green); }
+.connect-icon-fail { background: var(--red); }
+
+.connect-spinner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--card-border);
+  border-top-color: var(--red);
+  animation: connect-spin 0.7s linear infinite;
+  background: var(--bg);
+}
+
+@keyframes connect-spin {
+  to { transform: rotate(360deg); }
+}
+
+.connect-status { text-align: center; color: var(--text-dim); font-size: 14px; }
+
+.connect-status-ok p { color: var(--green); font-weight: 600; margin-bottom: 8px; }
+
+.connect-status-fail { text-align: left; }
+.connect-fail-title { color: var(--red); font-weight: 700; font-size: 16px; margin-bottom: 12px; }
+.connect-fail-subtitle { font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.connect-status-fail ul { margin: 0 0 16px; padding-left: 18px; color: var(--text-dim); font-size: 13px; line-height: 1.6; }
+.connect-status-fail a { color: var(--red); }
+.connect-fail-detail {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--bg-soft);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  word-break: break-word;
+}
+
 @media (max-width: 860px) {
   .main-nav.open {
     display: flex;

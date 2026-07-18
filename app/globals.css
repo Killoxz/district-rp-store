@@ -904,15 +904,6 @@ a { color: inherit; text-decoration: none; }
   object-fit: cover;
 }
 
-.connect-node-icon-white {
-  background: #ffffff;
-}
-
-.connect-node-icon-white img {
-  object-fit: contain;
-  padding: 10px;
-}
-
 .connect-node-fallback {
   font-size: 10px;
   font-weight: 700;

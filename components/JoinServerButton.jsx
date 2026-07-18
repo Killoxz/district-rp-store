@@ -102,7 +102,7 @@ export function JoinServerButton({ joinLink, discordLink }) {
           </div>
 
           <div className="connect-node">
-            <div className="connect-node-icon connect-node-icon-white">
+            <div className="connect-node-icon">
               <img src="/images/roblox-logo.png" alt="" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'flex'; }} />
               <span className="connect-node-fallback" style={{ display: 'none' }}>RBLX</span>
             </div>

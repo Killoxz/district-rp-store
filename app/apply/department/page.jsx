@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
 import { submitDepartmentApplicationAction } from '@/app/actions/departmentApplication';
+import DepartmentFields from './DepartmentFields';
 
 export const metadata = { title: 'Department Application | District RP' };
 
@@ -40,16 +41,7 @@ export default async function DepartmentApplicationPage({ searchParams }) {
       )}
 
       <form action={submitDepartmentApplicationAction} className="application-form">
-        <div className="field">
-          <label htmlFor="department">Department</label>
-          <select id="department" name="department" required defaultValue="">
-            <option value="" disabled>Choose a department&hellip;</option>
-            <option value="police">Police Department</option>
-            <option value="sheriff">Sheriff&rsquo;s Department</option>
-            <option value="fire">Fire Department</option>
-            <option value="ems">EMS</option>
-          </select>
-        </div>
+        <DepartmentFields />
 
         <div className="field">
           <label htmlFor="discordUsername">Discord Username</label>

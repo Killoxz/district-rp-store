@@ -19,7 +19,7 @@ export async function POST(request) {
 
   const approved = application.status === 'approved';
 
-  const html = buildDepartmentDecisionEmail({ department: application.department, approved });
+  const html = buildDepartmentDecisionEmail({ department: application.department, approved, station: application.station });
 
   const result = await sendEmail({
     to: application.email,

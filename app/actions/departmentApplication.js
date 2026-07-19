@@ -17,8 +17,13 @@ export async function submitDepartmentApplicationAction(formData) {
     const experience = formData.get('experience')?.toString().trim();
     const reason = formData.get('reason')?.toString().trim();
     const availability = formData.get('availability')?.toString().trim();
+    const stationInput = formData.get('station')?.toString().trim();
+    const station = ['fire', 'ems'].includes(department) ? stationInput : null;
 
     if (!department || !discordUsername || !email || !reason) {
+      redirect('/apply/department?error=missing_fields');
+    }
+    if (['fire', 'ems'].includes(department) && !station) {
       redirect('/apply/department?error=missing_fields');
     }
 
@@ -34,6 +39,7 @@ export async function submitDepartmentApplicationAction(formData) {
       experience,
       reason,
       availability,
+      station,
     });
 
     await notifyDiscordDepartmentApplication({
@@ -45,6 +51,7 @@ export async function submitDepartmentApplicationAction(formData) {
       experience,
       reason,
       availability,
+      station,
     }).catch((err) => console.error('Failed to notify Discord of department application:', err));
 
     redirect('/apply/department?submitted=1');

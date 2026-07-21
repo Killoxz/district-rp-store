@@ -3,6 +3,7 @@ import { Providers } from './providers';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { NotificationToast } from '@/components/NotificationToast';
+import { DevToolsGuard } from '@/components/DevToolsGuard';
 
 export const metadata = {
   title: 'District RP | Store',
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <Providers>
+          <DevToolsGuard />
           <Header />
           <main>{children}</main>
           <Footer />

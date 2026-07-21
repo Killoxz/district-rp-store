@@ -138,7 +138,7 @@ export default function StaffApplicationForm({ action }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
+      <div style={{ display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap' }}>
         {step > 1 && (
           <button type="button" className="btn btn-outline" onClick={goBack}>Back</button>
         )}

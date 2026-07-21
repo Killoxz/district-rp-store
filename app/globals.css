@@ -819,9 +819,6 @@ a { color: inherit; text-decoration: none; }
   .brand-name { font-size: 13px; }
   .nav-actions { gap: 8px; }
   .nav-actions .btn { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
-  .theme-toggle { width: 44px; height: 26px; }
-  .theme-toggle::before { width: 20px; height: 20px; }
-  :root[data-theme="dark"] .theme-toggle::before { transform: translateX(18px); }
   .cart-link { width: 34px; height: 34px; }
   .login-card { margin: 40px auto; padding: 28px 20px; }
   .banner-card { padding: 20px; }

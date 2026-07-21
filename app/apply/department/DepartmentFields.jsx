@@ -24,6 +24,7 @@ export default function DepartmentFields() {
           <option value="sheriff">Sheriff&rsquo;s Department</option>
           <option value="fire">Fire Department</option>
           <option value="ems">EMS</option>
+          <option value="dot">Department of Transportation</option>
         </select>
       </div>
 

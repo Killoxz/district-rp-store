@@ -31,7 +31,15 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge/IE */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 
 /* Deters casual right-click-save / drag-out of images. Doesn't (and can't)
    stop someone from grabbing an asset via devtools or the network tab. */
